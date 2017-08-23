@@ -6,6 +6,7 @@ namespace="$(< /var/run/secrets/kubernetes.io/serviceaccount/namespace)"
 readonly namespace
 readonly service_domain="_$SERVICE_PORT._tcp.$SERVICE.$namespace.svc.cluster.local"
 readonly sentinel_domain="_$SENTINEL_PORT._tcp.$SENTINEL.$namespace.svc.cluster.local"
+: ${PASSWORD:=redis}
 
 redis_info () {
   set +e
@@ -75,8 +76,8 @@ run () {
   # In this case, password is just an ID to distinguish this replica set from
   # other ones in the same Kubernetes cluster.
   { 
-    echo "masterauth $service_domain";
-    echo "requirepass $service_domain"; 
+    echo "masterauth $PASSWORD";
+    echo "requirepass $PASSWORD";
   } >> /opt/redis.conf
 
   # Replica with smaller number should be the preferred candidate for Master
